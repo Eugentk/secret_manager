@@ -55,17 +55,9 @@ jobs:
                 aws-access-key-id: ${{ env.AWS_ACCESS_KEY }}
                 aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
                 aws-region: ${{ env.AWS_DEFAULT_REGION }}
-            - name: Get secrets by name and by ARN
-              uses: aws-actions/aws-secretsmanager-get-secrets@v2
-              with:
-                secret-ids: |
-                    arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
-
-            - name: Export ENV from AWS SecretManager
-              uses: say8425/aws-secrets-manager-actions@v2.2.1
-              with:
-                SECRET_NAME: ${{ env.SECRET_NAME }}
-                OUTPUT_PATH: '.env' # optional
+            
+            - name: generate .env file
+              run: ./aws_secret_manager.sh  ${{ env.SECRET_NAME }} .env
             
             - name: test .env
               run: cat .env
