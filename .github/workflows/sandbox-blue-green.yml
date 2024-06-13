@@ -60,5 +60,11 @@ jobs:
                 secret-ids: |
                     arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
 
+            - name: Export ENV from AWS SecretManager
+              uses: say8425/aws-secrets-manager-actions@v2
+              with:
+                SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
+                OUTPUT_PATH: '.env' # optional
+            
             - name: test .env
-              run: printenv
+              run: cat .env
