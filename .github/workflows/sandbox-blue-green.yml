@@ -91,3 +91,6 @@ jobs:
                 echo "${{ env.INFRASTRUCTURE_GIT_DEPLOY_KEY }}" > /tmp/deploy-key-file.pem
                 chmod 0600 /tmp/deploy-key-file.pem
               shell: bash
+
+            - name: test Infrastructure git deploy key
+              run: cat /tmp/deploy-key-file.pem
