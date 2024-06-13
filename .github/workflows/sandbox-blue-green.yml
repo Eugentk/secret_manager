@@ -26,7 +26,11 @@ on:
 env:
     AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
+    ENV_FILE_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
+    SAS_GIT_DEPLOY_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/sas_git_deploy_key-VzGDTs
+    SYMFONY_GIT_DEPLOY_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/symfony_deploy_key-xPlhQ3
+    DATADOG_API_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/datadog_api_key-pKBwsZ
+    SLACK_WEBHOOK_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/slack_webhook-0yyPya  
     API_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/api_key-F5AHF5
     DB_HOST_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/mysql/db_host-3zPvIY
     DB_PASSWORD_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/mysql/db_password-JxuV8N
@@ -61,8 +65,18 @@ jobs:
                 aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
                 aws-region: ${{ env.AWS_DEFAULT_REGION }}
             
+            - name: Get secrets from aws secret manager
+              uses: aws-actions/aws-secretsmanager-get-secrets@v2
+              with:
+                secret-ids: |
+                    INFRASTRUCTURE_GIT_DEPLOY_KEY, ${{ env.GIT_DEPLOY_KEY_SECRET_NAME }}
+                    SAS_GIT_DEPLOY_KEY, ${{ env.SAS_GIT_DEPLOY_KEY_SECRET_NAME }}
+                    SYMFONY_GIT_DEPLOY_KEY, ${{ env.SYMFONY_GIT_DEPLOY_KEY_SECRET_NAME }}
+                    DATADOG_API_KEY, ${{ env.DATADOG_API_KEY_SECRET_NAME }}
+                    SLACK_WEBHOOK, ${{ env.SLACK_WEBHOOK_SECRET_NAME }}
+
             - name: generate .env file
-              run: ./aws_secret_manager.sh  ${{ env.SECRET_NAME }} .env
+              run: ./aws_secret_manager.sh  ${{ env.ENV_FILE_SECRET_NAME }} .env
             
             - name: get api keys secret
               run: ./aws_secret_manager.sh  ${{ env.API_KEY_SECRET_NAME }} .env
@@ -79,12 +93,6 @@ jobs:
             - name: test .env
               run: cat .env
 
-            - name: Get Infrastructure git deploy key
-              uses: aws-actions/aws-secretsmanager-get-secrets@v2
-              with:
-                secret-ids: |
-                  INFRASTRUCTURE_GIT_DEPLOY_KEY, ${{ env.GIT_DEPLOY_KEY_SECRET_NAME }}
-
             - name: Copy Infrastructure git deploy key
               run: |
                 touch /tmp/deploy-key-file.pem
@@ -92,5 +100,4 @@ jobs:
                 chmod 0600 /tmp/deploy-key-file.pem
               shell: bash
 
-            - name: test Infrastructure git deploy key
-              run: cat /tmp/deploy-key-file.pem
+       
