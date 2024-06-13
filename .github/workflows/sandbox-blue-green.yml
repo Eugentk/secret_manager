@@ -26,16 +26,16 @@ on:
 env:
     AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    ENV_FILE_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
-    SAS_GIT_DEPLOY_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/sas_git_deploy_key-VzGDTs
-    SYMFONY_GIT_DEPLOY_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/symfony_deploy_key-xPlhQ3
-    DATADOG_API_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/datadog_api_key-pKBwsZ
-    SLACK_WEBHOOK_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/slack_webhook-0yyPya  
-    API_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/api_key-F5AHF5
-    DB_HOST_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/mysql/db_host-3zPvIY
-    DB_PASSWORD_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/mysql/db_password-JxuV8N
-    ZOHO_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/zoho-5mI4Aj
-    GIT_DEPLOY_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/infrastructure_deploy_key-8kaOWq
+    ENV_FILE_SECRET_NAME: sandbox/env
+    SAS_GIT_DEPLOY_KEY_SECRET_NAME: sandbox/sas_git_deploy_key
+    SYMFONY_GIT_DEPLOY_KEY_SECRET_NAME: sandbox/symfony_deploy_key
+    DATADOG_API_KEY_SECRET_NAME: sandbox/datadog_api_key
+    SLACK_WEBHOOK_SECRET_NAME: sandbox/slack_webhook
+    API_KEY_SECRET_NAME: sandbox/api_key
+    DB_HOST_SECRET_NAME: sandbox/mysql/db_host
+    DB_PASSWORD_SECRET_NAME: sandbox/mysql/db_password
+    ZOHO_SECRET_NAME: sandbox/zoho
+    GIT_DEPLOY_KEY_SECRET_NAME: sandbox/infrastructure_deploy_key
     AWS_DEFAULT_REGION: eu-west-1
     GIT_BRANCH: main
 
