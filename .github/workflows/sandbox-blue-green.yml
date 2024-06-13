@@ -58,7 +58,7 @@ jobs:
               uses: aws-actions/aws-secretsmanager-get-secrets@v2
               with:
                 secret-ids: |
-                    /sandbox/env >> .env
+                    /sandbox/env
 
             - name: test .env
-              run: cat .env
+              run: printenv
