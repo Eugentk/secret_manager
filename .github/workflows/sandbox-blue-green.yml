@@ -30,6 +30,8 @@ env:
     API_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/api_key-F5AHF5
     DB_HOST_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/mysql/db_host-3zPvIY
     DB_PASSWORD_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/mysql/db_password-JxuV8N
+    ZOHO_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/zoho-5mI4Aj
+    GIT_DEPLOY_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/infrastructure_deploy_key-8kaOWq
     AWS_DEFAULT_REGION: eu-west-1
     GIT_BRANCH: main
 
@@ -71,5 +73,21 @@ jobs:
             - name: get dh_password secret
               run: ./aws_secret_manager.sh  ${{ env.DB_PASSWORD_SECRET_NAME }} .env
 
+            - name: get zoho secret
+              run: ./aws_secret_manager.sh  ${{ env.ZOHO_SECRET_NAME }} .env
+
             - name: test .env
               run: cat .env
+
+            - name: Get Infrastructure git deploy key
+              uses: aws-actions/aws-secretsmanager-get-secrets@v2
+              with:
+                secret-ids: |
+                  INFRASTRUCTURE_GIT_DEPLOY_KEY, ${{ env.GIT_DEPLOY_KEY_SECRET_NAME }}
+
+            - name: Copy Infrastructure git deploy key
+              run: |
+                touch /tmp/deploy-key-file.pem
+                echo "${{ env.INFRASTRUCTURE_GIT_DEPLOY_KEY }}" > /tmp/deploy-key-file.pem
+                chmod 0600 /tmp/deploy-key-file.pem
+              shell: bash
