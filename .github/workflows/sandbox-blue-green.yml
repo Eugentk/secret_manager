@@ -28,6 +28,8 @@ env:
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
     API_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/api_key-F5AHF5
+    DB_HOST_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/mysql/db_host-3zPvIY
+    DB_PASSWORD_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/mysql/db_password-JxuV8N
     AWS_DEFAULT_REGION: eu-west-1
     GIT_BRANCH: main
 
@@ -60,11 +62,14 @@ jobs:
             - name: generate .env file
               run: ./aws_secret_manager.sh  ${{ env.SECRET_NAME }} .env
             
-            - name: generate .env_api_key file
-              run: ./aws_secret_manager.sh  ${{ env.API_KEY_SECRET_NAME }} .env_api_key
+            - name: get api keys secret
+              run: ./aws_secret_manager.sh  ${{ env.API_KEY_SECRET_NAME }} .env
 
-            - name: set up .env
-              run: cat .env_api_key >> .env
+            - name: get dh_host secret
+              run: ./aws_secret_manager.sh  ${{ env.DB_HOST_SECRET_NAME }} .env
+            
+            - name: get dh_password secret
+              run: ./aws_secret_manager.sh  ${{ env.DB_PASSWORD_SECRET_NAME }} .env
 
             - name: test .env
               run: cat .env
