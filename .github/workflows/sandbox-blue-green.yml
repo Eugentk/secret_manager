@@ -1,0 +1,64 @@
+name: Stage. CI/CD with Blue/Green Deployment
+run-name: ${{ github.actor }} is running GitHub Actions 🚀
+
+on:
+  workflow_dispatch:
+    inputs:
+      software-setup:
+        description: 'Setup/configure required software on EC2 instances (Optional)'
+        default: false
+        type: boolean
+      deployment-env:
+        description: 'Deployment environment'
+        required: true
+        default: 'blue'
+        type: choice
+        options:
+          - blue
+          - green
+      git-ref:
+        description: 'Git Reference (Optional. branch/commit hash)'
+        required: false
+      jira-id:
+        description: 'Jira Release ID (Optional)'
+        required: false
+
+env:
+    AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    AWS_DEFAULT_REGION: eu-west-1
+    GIT_BRANCH: main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        name: Build Docker image
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+                ref: ${{ env.GIT_BRANCH }}
+              if: github.event.inputs.git-ref == ''
+
+            - name: Checkout Repository (Custom Git Reference)
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+                ref: ${{ github.event.inputs.git-ref }}
+              if: github.event.inputs.git-ref != ''
+
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                aws-access-key-id: ${{ env.AWS_ACCESS_KEY }}
+                aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ${{ env.AWS_DEFAULT_REGION }}
+            - name: Get secrets by name and by ARN
+              uses: aws-actions/aws-secretsmanager-get-secrets@v2
+              with:
+                secret-ids: |
+                    /sandbox/env >> .env
+
+            - name: test .env
+              run: cat .env
