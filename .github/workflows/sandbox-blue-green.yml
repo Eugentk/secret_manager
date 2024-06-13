@@ -26,6 +26,7 @@ on:
 env:
     AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
     AWS_DEFAULT_REGION: eu-west-1
     GIT_BRANCH: main
 
@@ -61,9 +62,9 @@ jobs:
                     arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
 
             - name: Export ENV from AWS SecretManager
-              uses: say8425/aws-secrets-manager-actions@v2
+              uses: say8425/aws-secrets-manager-actions@v2.2.1
               with:
-                SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
+                SECRET_NAME: ${{ env.SECRET_NAME }}
                 OUTPUT_PATH: '.env' # optional
             
             - name: test .env
