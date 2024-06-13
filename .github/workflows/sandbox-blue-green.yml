@@ -27,6 +27,7 @@ env:
     AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/env-0qCMGq
+    API_KEY_SECRET_NAME: arn:aws:secretsmanager:eu-west-1:574137177783:secret:sandbox/api_key-F5AHF5
     AWS_DEFAULT_REGION: eu-west-1
     GIT_BRANCH: main
 
@@ -59,5 +60,11 @@ jobs:
             - name: generate .env file
               run: ./aws_secret_manager.sh  ${{ env.SECRET_NAME }} .env
             
+            - name: generate .env_api_key file
+              run: ./aws_secret_manager.sh  ${{ env.API_KEY_SECRET_NAME }} .env_api_key
+
+            - name: set up .env
+              run: cat .env_api_key >> .env
+
             - name: test .env
               run: cat .env
