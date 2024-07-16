@@ -72,24 +72,24 @@ jobs:
                     SLACK_WEBHOOK, ${{ env.SLACK_WEBHOOK_SECRET_NAME }}
                 #parse-json-secrets: true
 
-            - name: Slack Notification
-              uses: rtCamp/action-slack-notify@v2
-              env:
-                  SLACK_WEBHOOK: ${{ env.SLACK_WEBHOOK }}
-                  SLACK_CHANNEL: ${{ env.SLACK_CHANNEL }}
-                  SLACK_COLOR: ${{ job.status }}
-                  SLACK_FOOTER: 'Powered By SellerAmp'
-                  MSG_MINIMAL: true
-                  SLACK_ICON_EMOJI: ':rocket:'
-                  SLACK_MESSAGE: |
-                      Test deploy from AWS Secret manager
-                  SLACK_TITLE: 'Deploy 🚀'
-                  SLACK_USERNAME: Deploy Started
+            # - name: Slack Notification
+            #   uses: rtCamp/action-slack-notify@v2
+            #   env:
+            #       SLACK_WEBHOOK: ${{ env.SLACK_WEBHOOK }}
+            #       SLACK_CHANNEL: ${{ env.SLACK_CHANNEL }}
+            #       SLACK_COLOR: ${{ job.status }}
+            #       SLACK_FOOTER: 'Powered By SellerAmp'
+            #       MSG_MINIMAL: true
+            #       SLACK_ICON_EMOJI: ':rocket:'
+            #       SLACK_MESSAGE: |
+            #           Test deploy from AWS Secret manager
+            #       SLACK_TITLE: 'Deploy 🚀'
+            #       SLACK_USERNAME: Deploy Started
 
             - name: Copy Infrastructure git deploy key
               run: |
                 touch /tmp/deploy-key-file.pem
-                echo "${{ env.SAS_GIT_DEPLOY_KEY }}" > /tmp/deploy-key-file.txt
+                echo "${{ env.SLACK_WEBHOOK }}" > /tmp/deploy-key-file.txt
               shell: bash
 
             - uses: actions/upload-artifact@v4
