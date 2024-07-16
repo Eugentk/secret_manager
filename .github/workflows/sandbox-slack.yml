@@ -89,7 +89,7 @@ jobs:
             - name: Copy Infrastructure git deploy key
               run: |
                 touch /tmp/deploy-key-file.pem
-                echo "${{ env.SANDBOX_SAS_GIT_DEPLOY_KEY }}" > /tmp/deploy-key-file.txt
+                echo "${{ env.SAS_GIT_DEPLOY_KEY }}" > /tmp/deploy-key-file.txt
               shell: bash
 
             - uses: actions/upload-artifact@v4
