@@ -69,12 +69,13 @@ jobs:
               with:
                 secret-ids: |
                     SAS_GIT_DEPLOY_KEY, ${{ env.SAS_GIT_DEPLOY_KEY_SECRET_NAME }}
-                    ${{ env.SLACK_WEBHOOK_SECRET_NAME }}
+                    SLACK_WEBHOOK, ${{ env.SLACK_WEBHOOK_SECRET_NAME }}
+                parse-json-secrets: true
 
             - name: Slack Notification
               uses: rtCamp/action-slack-notify@v2
               env:
-                  SLACK_WEBHOOK: ${{ env.SANDBOX_SLACK_WEBHOOK }}
+                  SLACK_WEBHOOK: ${{ env.SLACK_WEBHOOK }}
                   SLACK_CHANNEL: ${{ env.SLACK_CHANNEL }}
                   SLACK_COLOR: ${{ job.status }}
                   SLACK_FOOTER: 'Powered By SellerAmp'
@@ -89,7 +90,6 @@ jobs:
               run: |
                 touch /tmp/deploy-key-file.pem
                 echo "${{ env.SAS_GIT_DEPLOY_KEY_SECRET_NAME }}" > /tmp/deploy-key-file.pem
-                chmod 0600 /tmp/deploy-key-file.pem
                 cat /tmp/deploy-key-file.pem
               shell: bash
 
