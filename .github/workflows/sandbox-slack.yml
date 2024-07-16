@@ -63,14 +63,18 @@ jobs:
                 aws-region: ${{ env.AWS_DEFAULT_REGION }}
             
             - name: Get secrets from aws secret manager
+              id: get-aws-secret
               uses: aws-actions/aws-secretsmanager-get-secrets@v2
               with:
                 secret-ids: |
                     SAS_GIT_DEPLOY_KEY, ${{ env.SAS_GIT_DEPLOY_KEY_SECRET_NAME }}
                     SLACK_WEBHOOK, ${{ env.SLACK_WEBHOOK_SECRET_NAME }}
 
-            - name: test .env
-              run: printenv
+            - name: Slack notification
+              env:
+                SLACK_WEBHOOK_KEY: ${{ steps.get-aws-secret.outputs.secretValue }}
+              run: |
+                echo "Secret value: $SLACK_WEBHOOK_KEY"
 
             - name: Copy Infrastructure git deploy key
               run: |
