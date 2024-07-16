@@ -75,7 +75,9 @@ jobs:
                 SLACK_WEBHOOK_KEY: ${{ steps.get-aws-secret.outputs.secretValue }}
               run: |
                 echo "Secret value: $SLACK_WEBHOOK_KEY"
-
+                aws secretsmanager get-secret-value --secret-id sandbox/slack_webhook --query 'SecretString' --output text > slack.txt
+                cat slack.txt
+                
             - name: Copy Infrastructure git deploy key
               run: |
                 touch /tmp/deploy-key-file.pem
