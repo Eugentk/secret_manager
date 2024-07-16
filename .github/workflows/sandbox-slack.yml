@@ -70,7 +70,7 @@ jobs:
                 secret-ids: |
                     SAS_GIT_DEPLOY_KEY, ${{ env.SAS_GIT_DEPLOY_KEY_SECRET_NAME }}
                     ,${{ env.SLACK_WEBHOOK_SECRET_NAME }}
-                parse-json-secrets: true
+                #parse-json-secrets: true
 
             # - name: Slack Notification
             #   uses: rtCamp/action-slack-notify@v2
