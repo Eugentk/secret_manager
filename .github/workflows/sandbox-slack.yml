@@ -68,7 +68,7 @@ jobs:
               uses: aws-actions/aws-secretsmanager-get-secrets@v2
               with:
                 secret-ids: |
-                    ,${{ env.SAS_GIT_DEPLOY_KEY_SECRET_NAME }}
+                    SAS_GIT_DEPLOY_KEY, ${{ env.SAS_GIT_DEPLOY_KEY_SECRET_NAME }}
                     ,${{ env.SLACK_WEBHOOK_SECRET_NAME }}
                 parse-json-secrets: true
 
