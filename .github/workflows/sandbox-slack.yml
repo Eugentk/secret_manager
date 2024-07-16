@@ -70,6 +70,7 @@ jobs:
                 secret-ids: |
                     SAS_GIT_DEPLOY_KEY, ${{ env.SAS_GIT_DEPLOY_KEY_SECRET_NAME }}
                     , ${{ env.SLACK_WEBHOOK_SECRET_NAME }}
+                    , ${{ env.DATADOG_API_KEY_SECRET_NAME }}
                 parse-json-secrets: true
 
             # - name: Slack Notification
@@ -89,7 +90,7 @@ jobs:
             - name: Copy Infrastructure git deploy key
               run: |
                 touch /tmp/deploy-key-file.pem
-                echo "${{ env.SLACK_WEBHOOK }}" > /tmp/deploy-key-file.txt
+                echo "${{ env.DATADOG_API_KEY }}" > /tmp/deploy-key-file.txt
               shell: bash
 
             - uses: actions/upload-artifact@v4
