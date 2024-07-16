@@ -31,6 +31,7 @@ env:
     SYMFONY_GIT_DEPLOY_KEY_SECRET_NAME: sandbox/symfony_deploy_key
     DATADOG_API_KEY_SECRET_NAME: sandbox/datadog_api_key
     SLACK_WEBHOOK_SECRET_NAME: sandbox/slack_webhook
+    SLACK_CHANNEL: deployment
     API_KEY_SECRET_NAME: sandbox/api_key
     GIT_DEPLOY_KEY_SECRET_NAME: sandbox/infrastructure_deploy_key
     AWS_DEFAULT_REGION: eu-west-1
@@ -70,14 +71,20 @@ jobs:
                     SAS_GIT_DEPLOY_KEY, ${{ env.SAS_GIT_DEPLOY_KEY_SECRET_NAME }}
                     SLACK_WEBHOOK, ${{ env.SLACK_WEBHOOK_SECRET_NAME }}
 
-            - name: Slack notification
+            - name: Slack Notification
+              uses: rtCamp/action-slack-notify@v2
               env:
-                SLACK_WEBHOOK_KEY: ${{ steps.get-aws-secret.outputs.secretValue }}
-              run: |
-                echo "Secret value: $SLACK_WEBHOOK_KEY"
-                aws secretsmanager get-secret-value --secret-id sandbox/slack_webhook --query 'SecretString' --output text > slack.txt
-                cat slack.txt
-                
+                  SLACK_WEBHOOK: ${{ env.SLACK_WEBHOOK }}
+                  SLACK_CHANNEL: ${{ env.SLACK_CHANNEL }}
+                  SLACK_COLOR: ${{ job.status }}
+                  SLACK_FOOTER: 'Powered By SellerAmp'
+                  MSG_MINIMAL: true
+                  SLACK_ICON_EMOJI: ':rocket:'
+                  SLACK_MESSAGE: |
+                      Test deploy from AWS Secret manager
+                  SLACK_TITLE: 'Deploy 🚀'
+                  SLACK_USERNAME: Deploy Started
+
             - name: Copy Infrastructure git deploy key
               run: |
                 touch /tmp/deploy-key-file.pem
